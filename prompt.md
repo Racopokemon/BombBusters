@@ -10,3 +10,13 @@ Moin. Ich möchte mit meinen Freunden online ein Brettspiel ("Bomb Busters") spi
 - Jeder Spieler sieht die aktuelle Mausposition jedes anderen Spielers. Der Spieler hat eine zufällige Farbe (server-sided) und eine kleine Beschriftung mit dem Namen, der beim Betreten abgefragt wurde. 
 
 Das wars. Ich habe noch eine pieces.md angelegt mit einer Beschreibung den fürs Spiel benötigten Spielsteinen, lies dir die auch noch einmal durch. Für manche Level braucht man noch andere Steine (und ich will sicher mal Schriftgrößen und Farben ändern etc), vielleicht kannst du also eine pieces.js Datei anlegen, in der übersichtlich die Spielsteine erstellt werden, sodass man hier unkompliziert weitere Steine hinzufügen kann. 
+
+Geil, funktioniert gut! Ich hab ein paar Änderungen: 
+- Aufdecken und Verdecken sollte mit Rechtsklick statt mit Doppelklick passieren
+- Das Bewegen von Tiles sollte auch schon synchronisiert werden, wenn das Tile noch bewegt wird, nicht erst am Ende
+- Ich hätte gerne oben rechts ein kleines Menü mit Funktionien: 1: Shuffle wires - shuffelt alle normalen Kabel (nicht die mit Kommazahlen). Die Positionen bleiben alle, aber danach liegt dort vmtl ein anderes Kabel. Und 2: Cover wires - verdeckt alle normalen Kabel.  
+
+- Spielernamen durch unsere echten Namen ersetzen
+- 1-12 brauchen Hintergrund
+- Verdeckt und nicht haben vertauschte Farben - wo ist das schief gelaufen?
+- Ein bewegtes Element muss danach (synchronisiert) erst mal über allen anderen sein, sonst kann man daraus erkennen, wo hohe und tiefe Zahlen liegen

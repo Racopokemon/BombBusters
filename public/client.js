@@ -13,9 +13,11 @@ const state = {
   pieces: new Map(),
   players: new Map(),
   privateReveals: new Set(),
+  hoveredPieceId: null,
   drag: null,
   socket: null,
   cursorThrottle: 0,
+  dragSyncThrottle: 0,
   elements: {
     pieces: new Map(),
     cursors: new Map(),
@@ -54,7 +56,8 @@ function createPieceElement(piece) {
   element.innerHTML = '<img class="piece-image" alt="" /><div class="piece-text"></div>';
   element.dataset.pieceId = piece.id;
   element.addEventListener("pointerdown", onPiecePointerDown);
-  element.addEventListener("dblclick", onPieceDoubleClick);
+  element.addEventListener("pointerenter", onPiecePointerEnter);
+  element.addEventListener("pointerleave", onPiecePointerLeave);
   element.addEventListener("contextmenu", onPieceContextMenu);
   state.elements.pieces.set(piece.id, element);
   board.appendChild(element);
@@ -226,6 +229,17 @@ function onPiecePointerDown(event) {
     y: piece.y,
   };
   event.currentTarget.classList.add("dragging");
+  send({ type: "move-piece", id: piece.id, x: state.drag.x, y: state.drag.y });
+}
+
+function onPiecePointerEnter(event) {
+  state.hoveredPieceId = event.currentTarget.dataset.pieceId;
+}
+
+function onPiecePointerLeave(event) {
+  if (state.hoveredPieceId === event.currentTarget.dataset.pieceId) {
+    state.hoveredPieceId = null;
+  }
 }
 
 function onPiecePointerMove(event) {
@@ -242,6 +256,12 @@ function onPiecePointerMove(event) {
   state.drag.x = Math.max(0, Math.min(BOARD.width - piece.width, point.x - state.drag.offsetX));
   state.drag.y = Math.max(0, Math.min(BOARD.height - piece.height, point.y - state.drag.offsetY));
   renderPiece(piece);
+
+  const now = performance.now();
+  if (now - state.dragSyncThrottle >= 35) {
+    state.dragSyncThrottle = now;
+    send({ type: "move-piece", id: piece.id, x: state.drag.x, y: state.drag.y });
+  }
 }
 
 function finishDrag() {
@@ -262,13 +282,12 @@ function finishDrag() {
   state.drag = null;
 }
 
-function onPieceDoubleClick(event) {
+function onPieceContextMenu(event) {
+  event.preventDefault();
   send({ type: "toggle-face", id: event.currentTarget.dataset.pieceId });
 }
 
-function onPieceContextMenu(event) {
-  event.preventDefault();
-  const pieceId = event.currentTarget.dataset.pieceId;
+function togglePrivateReveal(pieceId) {
   const piece = state.pieces.get(pieceId);
   if (!piece || piece.faceUpByDefault) {
     return;
@@ -304,6 +323,42 @@ window.addEventListener("pointerup", () => {
 
 board.addEventListener("pointerleave", () => {
   send({ type: "cursor", x: 0, y: 0, active: false });
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.key.toLowerCase() !== " " || event.repeat) {
+    return;
+  }
+
+  const pieceId = state.hoveredPieceId;
+  if (!pieceId) {
+    return;
+  }
+
+  togglePrivateReveal(pieceId);
+});
+
+const menu = document.createElement("div");
+menu.className = "action-menu";
+menu.innerHTML = `
+  <button type="button" data-action="shuffle-wires">Shuffle wires</button>
+  <button type="button" data-action="cover-wires">Cover wires</button>
+`;
+document.body.appendChild(menu);
+
+menu.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-action]");
+  if (!button) {
+    return;
+  }
+
+  if (button.dataset.action === "shuffle-wires") {
+    send({ type: "shuffle-wires" });
+  }
+
+  if (button.dataset.action === "cover-wires") {
+    send({ type: "cover-wires" });
+  }
 });
 
 joinForm.addEventListener("submit", (event) => {

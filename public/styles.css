@@ -191,3 +191,33 @@ body::before {
 .join-card button:hover {
   filter: brightness(1.08);
 }
+
+.action-menu {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(8, 12, 20, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.32);
+  z-index: 21000;
+}
+
+.action-menu button {
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.action-menu button:hover {
+  background: rgba(255, 255, 255, 0.14);
+}

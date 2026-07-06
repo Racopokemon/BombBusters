@@ -31,6 +31,13 @@ function clonePieces(pieces) {
   return pieces.map(clonePiece);
 }
 
+function shuffleInPlace(items) {
+  for (let index = items.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [items[index], items[swapIndex]] = [items[swapIndex], items[index]];
+  }
+}
+
 function snapshotPlayers(players) {
   return Array.from(players.values()).map((player) => ({
     id: player.id,
@@ -123,6 +130,30 @@ function clampPiece(piece) {
   piece.y = Math.max(0, Math.min(BOARD.height - piece.height, piece.y));
 }
 
+function getNormalCablePieces() {
+  return Array.from(state.pieces.values()).filter((piece) => piece.group === "Kabel" && piece.name === "cable");
+}
+
+function shuffleNormalCables() {
+  const normalCables = getNormalCablePieces();
+  const shuffled = normalCables.map(clonePiece);
+  shuffleInPlace(shuffled);
+
+  normalCables.forEach((piece, index) => {
+    const source = shuffled[index];
+    piece.label = source.label;
+    piece.front = { ...source.front };
+    piece.back = { ...source.back };
+    piece.faceUpByDefault = source.faceUpByDefault;
+  });
+}
+
+function coverNormalCables() {
+  for (const piece of getNormalCablePieces()) {
+    piece.faceUpByDefault = false;
+  }
+}
+
 wss.on("connection", (socket) => {
   const playerId = randomUUID();
   const color = colorForIndex(state.players.size + Math.floor(Math.random() * 1000));
@@ -206,6 +237,18 @@ wss.on("connection", (socket) => {
       }
 
       piece.faceUpByDefault = !piece.faceUpByDefault;
+      sendState();
+      return;
+    }
+
+    if (message.type === "shuffle-wires") {
+      shuffleNormalCables();
+      sendState();
+      return;
+    }
+
+    if (message.type === "cover-wires") {
+      coverNormalCables();
       sendState();
     }
   });
