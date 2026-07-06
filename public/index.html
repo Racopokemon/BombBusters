@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bomb Busters Prototype</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="board"></div>
+
+    <div id="joinOverlay" class="overlay">
+      <form id="joinForm" class="join-card">
+        <h1>Bomb Busters</h1>
+        <p>Gib deinen Namen ein, dann trittst du der einen gemeinsamen Session bei.</p>
+        <label>
+          Name
+          <input id="nameInput" name="name" maxlength="40" autocomplete="nickname" required />
+        </label>
+        <button type="submit">Beitreten</button>
+      </form>
+    </div>
+
+    <script type="module" src="/client.js"></script>
+  </body>
+</html>
