@@ -64,7 +64,13 @@ function colorForIndex(index) {
 const state = {
   pieces: new Map(createInitialPieces().map((piece) => [piece.id, piece])),
   players: new Map(),
+  nextZIndex: 1,
 };
+
+for (const piece of state.pieces.values()) {
+  const pieceZ = Number.isFinite(piece.zIndex) ? piece.zIndex : 1;
+  state.nextZIndex = Math.max(state.nextZIndex, pieceZ);
+}
 
 const server = createServer(async (request, response) => {
   const url = new URL(request.url, "http://localhost");
@@ -225,6 +231,12 @@ wss.on("connection", (socket) => {
 
       piece.x = Number.isFinite(message.x) ? message.x : piece.x;
       piece.y = Number.isFinite(message.y) ? message.y : piece.y;
+
+      if (message.commit === true) {
+        state.nextZIndex += 1;
+        piece.zIndex = state.nextZIndex;
+      }
+
       clampPiece(piece);
       sendState();
       return;

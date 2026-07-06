@@ -16,7 +16,13 @@ Geil, funktioniert gut! Ich hab ein paar Änderungen:
 - Das Bewegen von Tiles sollte auch schon synchronisiert werden, wenn das Tile noch bewegt wird, nicht erst am Ende
 - Ich hätte gerne oben rechts ein kleines Menü mit Funktionien: 1: Shuffle wires - shuffelt alle normalen Kabel (nicht die mit Kommazahlen). Die Positionen bleiben alle, aber danach liegt dort vmtl ein anderes Kabel. Und 2: Cover wires - verdeckt alle normalen Kabel.  
 
+- Ein bewegtes Element muss danach (synchronisiert) erst mal über allen anderen sein, sonst kann man daraus erkennen, wo hohe und tiefe Zahlen liegen
+- Die Outline für privat aufgedeckte Steine soll auch aufgedeckt sichtbar sein
+- Drag Drop soll nicht möglich sein mit Rechtsklick
+
 - Spielernamen durch unsere echten Namen ersetzen
 - 1-12 brauchen Hintergrund
 - Verdeckt und nicht haben vertauschte Farben - wo ist das schief gelaufen?
-- Ein bewegtes Element muss danach (synchronisiert) erst mal über allen anderen sein, sonst kann man daraus erkennen, wo hohe und tiefe Zahlen liegen
+- Erstelle ein = und != Label
+- Kartennamen verteilen 1-12 (googeln was draufsteht warte ich HAB das game doch selber lol einfach mal reingucken)
+- Lebensboxen

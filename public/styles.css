@@ -74,7 +74,7 @@ body::before {
 }
 
 .piece.private-reveal {
-  outline: 3px solid #ffe66d;
+  outline: 3px solid #e2fffcd5;
   outline-offset: 2px;
 }
 

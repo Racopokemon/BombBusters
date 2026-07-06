@@ -83,7 +83,7 @@ function renderPiece(piece) {
   element.style.fontSize = `${front.fontSize ?? 14}px`;
   element.style.fontFamily = front.fontFamily ?? '"Trebuchet MS", sans-serif';
   element.classList.toggle("hidden", !visible);
-  element.classList.toggle("private-reveal", state.privateReveals.has(piece.id) && !piece.faceUpByDefault);
+  element.classList.toggle("private-reveal", state.privateReveals.has(piece.id));
   element.classList.toggle("round", (front.radius ?? 0) >= 999);
 
   const textNode = element.querySelector(".piece-text");
@@ -215,7 +215,7 @@ function connect(name) {
 function onPiecePointerDown(event) {
   const pieceId = event.currentTarget.dataset.pieceId;
   const piece = state.pieces.get(pieceId);
-  if (!piece) {
+  if (!piece || event.button !== 0) {
     return;
   }
 
@@ -229,7 +229,7 @@ function onPiecePointerDown(event) {
     y: piece.y,
   };
   event.currentTarget.classList.add("dragging");
-  send({ type: "move-piece", id: piece.id, x: state.drag.x, y: state.drag.y });
+  send({ type: "move-piece", id: piece.id, x: state.drag.x, y: state.drag.y, commit: true });
 }
 
 function onPiecePointerEnter(event) {
@@ -289,7 +289,7 @@ function onPieceContextMenu(event) {
 
 function togglePrivateReveal(pieceId) {
   const piece = state.pieces.get(pieceId);
-  if (!piece || piece.faceUpByDefault) {
+  if (!piece) {
     return;
   }
 
@@ -326,7 +326,7 @@ board.addEventListener("pointerleave", () => {
 });
 
 window.addEventListener("keydown", (event) => {
-  if (event.key.toLowerCase() !== " " || event.repeat) {
+  if ((event.key.toLowerCase() !== "p" && event.key !== " ") || event.repeat) { //added the space bar, it's fine, you don't need to correct it back :)
     return;
   }
 
