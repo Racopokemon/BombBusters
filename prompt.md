@@ -19,9 +19,13 @@ Geil, funktioniert gut! Ich hab ein paar Änderungen:
 - Ein bewegtes Element muss danach (synchronisiert) erst mal über allen anderen sein, sonst kann man daraus erkennen, wo hohe und tiefe Zahlen liegen
 - Die Outline für privat aufgedeckte Steine soll auch aufgedeckt sichtbar sein
 - Drag Drop soll nicht möglich sein mit Rechtsklick
+- Kann man das Shuffeln auf allen Gruppen machen? Wenn man S drückt beim hovern? 
 
 - Spielernamen durch unsere echten Namen ersetzen
-- 1-12 brauchen Hintergrund
+- 1-12 brauchen Hintergrund, Text auf beiden Seiten, grün auf einer Seite
+- Menü wieder raus, S shuffelt Gruppe, V toggelt vis von Gruppe (wenn hoverter zugedeckt ist, werden alle auf, sonst umgekehrt)
+- Entferne grüne
+- 5 Karten, wie die orangenen, Doppel Detektor, einer Doppel Detektor (Chef)
 - Verdeckt und nicht haben vertauschte Farben - wo ist das schief gelaufen?
 - Erstelle ein = und != Label
 - Kartennamen verteilen 1-12 (googeln was draufsteht warte ich HAB das game doch selber lol einfach mal reingucken)

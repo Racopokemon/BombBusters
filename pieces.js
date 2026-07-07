@@ -84,6 +84,23 @@ function layoutGrid(pieces, options) {
   });
 }
 
+const playerNames = ["Birte","Tobi","Robin","Jonas","Ramin"];
+const itenNames = [
+  "1\n!= Label",
+  "2\nWalkie-\nTalkies",
+  "3\n3x\nDetektor",
+  "4\nPost it",
+  "5\nSuper-\nDetektor",
+  "6\n+1 Leben",
+  "7\nNotfall-\nBatterien",
+  "8\nRadar\n",
+  "9\nStabilisator",
+  "10\nDoppel-\nStrahl",
+  "11\nThermo",
+  "12\n= Label",
+  "Gelb\n+2 Equip\nKarten"
+];
+
 const sections = [
   {
     startX: 30,

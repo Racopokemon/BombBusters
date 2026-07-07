@@ -5,7 +5,7 @@ const nameInput = document.getElementById("nameInput");
 
 const BOARD = {
   width: 1600,
-  height: 1000,
+  height: 900,
 };
 
 const state = {
