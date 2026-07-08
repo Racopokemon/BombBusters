@@ -82,7 +82,6 @@ function renderPiece(piece) {
   element.style.color = front.textColor ?? "#ffffff";
   element.style.fontSize = `${front.fontSize ?? 14}px`;
   element.style.fontFamily = front.fontFamily ?? '"Trebuchet MS", sans-serif';
-  element.classList.toggle("hidden", !visible);
   element.classList.toggle("private-reveal", state.privateReveals.has(piece.id));
   element.classList.toggle("round", (front.radius ?? 0) >= 999);
 
