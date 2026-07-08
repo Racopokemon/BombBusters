@@ -364,7 +364,7 @@ window.addEventListener("keydown", (event) => {
 
 const footerHint = document.createElement("div");
 footerHint.className = "board-hint";
-footerHint.textContent = "Rechtsklick zum auf/verdecken, P um privat aufzudecken, S zum Mischen, V zum auf/verdecken von Gruppen";
+footerHint.textContent = "Rechtsklick: auf/verdecken, P: privat aufdecken, S: mischen, V: auf/verdecken (Gruppen)";
 document.body.appendChild(footerHint);
 
 joinForm.addEventListener("submit", (event) => {
