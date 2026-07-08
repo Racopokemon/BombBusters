@@ -326,7 +326,7 @@ board.addEventListener("pointerleave", () => {
 });
 
 window.addEventListener("keydown", (event) => {
-  if ((event.key.toLowerCase() !== "p" && event.key !== " ") || event.repeat) { //added the space bar, it's fine, you don't need to correct it back :)
+  if (event.repeat) {
     return;
   }
 
@@ -335,31 +335,38 @@ window.addEventListener("keydown", (event) => {
     return;
   }
 
-  togglePrivateReveal(pieceId);
-});
-
-const menu = document.createElement("div");
-menu.className = "action-menu";
-menu.innerHTML = `
-  <button type="button" data-action="shuffle-wires">Shuffle wires</button>
-  <button type="button" data-action="cover-wires">Cover wires</button>
-`;
-document.body.appendChild(menu);
-
-menu.addEventListener("click", (event) => {
-  const button = event.target.closest("button[data-action]");
-  if (!button) {
+  const piece = state.pieces.get(pieceId);
+  if (!piece) {
     return;
   }
 
-  if (button.dataset.action === "shuffle-wires") {
-    send({ type: "shuffle-wires" });
+  const key = event.key.toLowerCase();
+  if (key === "p" || key === " ") { //I added the space bar, please keep it and don't revert it :)
+    event.stopPropagation();
+    event.preventDefault();
+    togglePrivateReveal(pieceId);
+    return;
+  }
+  
+  if (key === "s") {
+    event.stopPropagation();
+    event.preventDefault();
+    send({ type: "shuffle-group", group: piece.group });
+    return;
   }
 
-  if (button.dataset.action === "cover-wires") {
-    send({ type: "cover-wires" });
+  if (key === "v") {
+    event.stopPropagation();
+    event.preventDefault();
+    send({ type: "toggle-group-visibility", group: piece.group, visible: isPieceVisibleForMe(piece) });
+    return false;
   }
 });
+
+const footerHint = document.createElement("div");
+footerHint.className = "board-hint";
+footerHint.textContent = "Rechtsklick zum auf/verdecken, P um privat aufzudecken, S zum Mischen, V zum auf/verdecken von Gruppen";
+document.body.appendChild(footerHint);
 
 joinForm.addEventListener("submit", (event) => {
   event.preventDefault();

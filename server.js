@@ -136,27 +136,45 @@ function clampPiece(piece) {
   piece.y = Math.max(0, Math.min(BOARD.height - piece.height, piece.y));
 }
 
-function getNormalCablePieces() {
-  return Array.from(state.pieces.values()).filter((piece) => piece.group === "Kabel" && piece.name === "cable");
+function getGroupPieces(group) {
+  return Array.from(state.pieces.values()).filter((piece) => piece.group === group);
 }
 
-function shuffleNormalCables() {
-  const normalCables = getNormalCablePieces();
-  const shuffled = normalCables.map(clonePiece);
+function piecePayload(piece) {
+  return {
+    label: piece.label,
+    kind: piece.kind,
+    width: piece.width,
+    height: piece.height,
+    front: { ...piece.front },
+    back: { ...piece.back },
+    faceUpByDefault: piece.faceUpByDefault,
+  };
+}
+
+function applyPiecePayload(piece, payload) {
+  piece.label = payload.label;
+  piece.kind = payload.kind;
+  piece.width = payload.width;
+  piece.height = payload.height;
+  piece.front = { ...payload.front };
+  piece.back = { ...payload.back };
+  piece.faceUpByDefault = payload.faceUpByDefault;
+}
+
+function shuffleGroupPieces(group) {
+  const pieces = getGroupPieces(group);
+  const shuffled = pieces.map(piecePayload);
   shuffleInPlace(shuffled);
 
-  normalCables.forEach((piece, index) => {
-    const source = shuffled[index];
-    piece.label = source.label;
-    piece.front = { ...source.front };
-    piece.back = { ...source.back };
-    piece.faceUpByDefault = source.faceUpByDefault;
+  pieces.forEach((piece, index) => {
+    applyPiecePayload(piece, shuffled[index]);
   });
 }
 
-function coverNormalCables() {
-  for (const piece of getNormalCablePieces()) {
-    piece.faceUpByDefault = false;
+function setGroupVisibility(group, faceUp) {
+  for (const piece of getGroupPieces(group)) {
+    piece.faceUpByDefault = faceUp;
   }
 }
 
@@ -253,14 +271,22 @@ wss.on("connection", (socket) => {
       return;
     }
 
-    if (message.type === "shuffle-wires") {
-      shuffleNormalCables();
+    if (message.type === "shuffle-group") {
+      if (typeof message.group !== "string" || !message.group) {
+        return;
+      }
+
+      shuffleGroupPieces(message.group);
       sendState();
       return;
     }
 
-    if (message.type === "cover-wires") {
-      coverNormalCables();
+    if (message.type === "toggle-group-visibility") {
+      if (typeof message.group !== "string" || !message.group) {
+        return;
+      }
+
+      setGroupVisibility(message.group, !Boolean(message.visible));
       sendState();
     }
   });

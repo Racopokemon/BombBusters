@@ -20,13 +20,16 @@ Geil, funktioniert gut! Ich hab ein paar Änderungen:
 - Die Outline für privat aufgedeckte Steine soll auch aufgedeckt sichtbar sein
 - Drag Drop soll nicht möglich sein mit Rechtsklick
 - Kann man das Shuffeln auf allen Gruppen machen? Wenn man S drückt beim hovern? 
-
 - Spielernamen durch unsere echten Namen ersetzen
-- 1-12 brauchen Hintergrund, Text auf beiden Seiten, grün auf einer Seite
 - Menü wieder raus, S shuffelt Gruppe, V toggelt vis von Gruppe (wenn hoverter zugedeckt ist, werden alle auf, sonst umgekehrt)
-- Entferne grüne
 - 5 Karten, wie die orangenen, Doppel Detektor, einer Doppel Detektor (Chef)
 - Verdeckt und nicht haben vertauschte Farben - wo ist das schief gelaufen?
-- Erstelle ein = und != Label
 - Kartennamen verteilen 1-12 (googeln was draufsteht warte ich HAB das game doch selber lol einfach mal reingucken)
+
+- 1-12 brauchen Hintergrund, Text auf beiden Seiten, grün auf einer Seite
+- Shuffeln mixt zu große Gruppen
+- Leertaste macht nix mehr
+- s und p und v consumen? 
+- Entferne grüne
+- Erstelle ein = und != Label
 - Lebensboxen
