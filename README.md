@@ -6,4 +6,4 @@ There is only a single session, but thats enough for you and your friends.
 ```
 npm install
 npm start
-````
+```
