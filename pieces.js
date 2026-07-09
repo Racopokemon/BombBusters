@@ -101,14 +101,6 @@ const ItemNames = [
   "Gelb\n\n+2 Equip\nKarten"
 ];
 
-const doubleDetectorCards = [
-  "Doppel\nDetektor",
-  "Doppel\nDetektor",
-  "Doppel\nDetektor",
-  "Doppel\nDetektor",
-  "Doppel\nDetektor\n(Chef)",
-];
-
 const sections = [
   {
     startX: 30,
@@ -143,7 +135,7 @@ const sections = [
         labels: Array.from({ length: 11 }, (_, index) => `${index + 1}.1`),
         width: 30,
         height: 85,
-        frontFill: "#111111",
+        frontFill: "#c18308",
         backFill: "#2d6cdf",
         frontTextColor: "#ffd84f",
         fontSize: 12,
@@ -194,7 +186,7 @@ const sections = [
         count: 2,
         width: 30,
         height: 30,
-        frontFill: "#111111",
+        frontFill: "#c18308",
         backFill: "#2d6cdf",
         frontTextColor: "#ffd84f",
         fontSize: 10,
@@ -232,7 +224,7 @@ const sections = [
         height: 24,
         frontFill: "#f5d94b",
         frontText: "?",
-        frontTextColor: "#111111",
+        frontTextColor: " #c18308",
         fontSize: 10,
         radius: 999,
       }),
@@ -341,7 +333,8 @@ const sections = [
       ...createPiecesFromDefinition({
         group: "Doppeldetektor",
         name: "double-detector",
-        labels: doubleDetectorCards.slice(0, 4),
+        labels: ["Doppel\nDetektor"],
+        count: 4,
         width: 68,
         height: 100,
         frontFill: "#f08a24",
@@ -353,7 +346,7 @@ const sections = [
       ...createPiecesFromDefinition({
         group: "Doppeldetektor",
         name: "double-detector-chef",
-        labels: [doubleDetectorCards[4]],
+        labels: ["Doppel\nDetektor\n\n(Chef)"],
         width: 68,
         height: 100,
         frontFill: "#f08a24",
