@@ -67,7 +67,7 @@ function createPieceElement(piece) {
 
 function renderPiece(piece) {
   if (piece.faceUpByDefault && state.privateReveals.has(piece.id)) {
-    state.privateReveals.delete(piece);
+    state.privateReveals.delete(piece.id);
   }
   const element = state.elements.pieces.get(piece.id) ?? createPieceElement(piece);
   const visible = isPieceVisibleForMe(piece);
