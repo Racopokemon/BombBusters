@@ -44,10 +44,31 @@ body::before {
 }
 
 .piece,
-.cursor {
+.cursor,
+.holder {
   position: absolute;
   user-select: none;
   box-sizing: border-box;
+}
+
+.holder {
+  pointer-events: none;
+  border: 2px dashed rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  background: rgba(8, 12, 20, 0.18);
+  z-index: 1;
+}
+
+.holder-label {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(8, 12, 20, 0.72);
+  color: rgba(233, 238, 251, 0.86);
+  font-size: 11px;
+  letter-spacing: 0.02em;
 }
 
 .piece {

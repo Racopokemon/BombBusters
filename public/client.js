@@ -12,6 +12,7 @@ const BOARD = {
 const state = {
   selfId: null,
   pieces: new Map(),
+  holders: new Map(),
   players: new Map(),
   privateReveals: new Set(),
   hoveredPieceId: null,
@@ -20,6 +21,7 @@ const state = {
   cursorThrottle: 0,
   dragSyncThrottle: 0,
   elements: {
+    holders: new Map(),
     pieces: new Map(),
     cursors: new Map(),
   },
@@ -63,6 +65,40 @@ function createPieceElement(piece) {
   state.elements.pieces.set(piece.id, element);
   board.appendChild(element);
   return element;
+}
+
+function createHolderElement(holder) {
+  const element = document.createElement("div");
+  element.className = "holder";
+  element.innerHTML = '<div class="holder-label"></div>';
+  element.dataset.holderId = holder.id;
+  state.elements.holders.set(holder.id, element);
+  board.appendChild(element);
+  return element;
+}
+
+function renderHolder(holder) {
+  const element = state.elements.holders.get(holder.id) ?? createHolderElement(holder);
+  element.style.left = percentX(holder.x);
+  element.style.top = percentY(holder.y);
+  element.style.width = percentX(holder.width);
+  element.style.height = percentY(holder.height);
+  element.querySelector(".holder-label").textContent = holder.label ?? "";
+}
+
+function renderHolders() {
+  const existingIds = new Set(state.holders.keys());
+
+  for (const [holderId, element] of state.elements.holders.entries()) {
+    if (!existingIds.has(holderId)) {
+      element.remove();
+      state.elements.holders.delete(holderId);
+    }
+  }
+
+  for (const holder of state.holders.values()) {
+    renderHolder(holder);
+  }
 }
 
 function renderPiece(piece) {
@@ -156,6 +192,7 @@ function renderCursors() {
 }
 
 function renderAll() {
+  renderHolders();
   renderPieces();
   renderCursors();
 }
@@ -185,6 +222,7 @@ function connect(name) {
       BOARD.width = message.board.width;
       BOARD.height = message.board.height;
       state.pieces = new Map(message.pieces.map((piece) => [piece.id, piece]));
+      state.holders = new Map((message.holders ?? []).map((holder) => [holder.id, holder]));
       updatePlayers(message.players);
       joinOverlay.style.display = "none";
       renderAll();
@@ -193,6 +231,7 @@ function connect(name) {
     
     if (message.type === "state") {
       state.pieces = new Map(message.pieces.map((piece) => [piece.id, piece]));
+      state.holders = new Map((message.holders ?? []).map((holder) => [holder.id, holder]));
       updatePlayers(message.players);
       renderAll();
       return;
@@ -274,7 +313,7 @@ function finishDrag() {
 
   const piece = state.pieces.get(state.drag.pieceId);
   if (piece) {
-    send({ type: "move-piece", id: piece.id, x: state.drag.x, y: state.drag.y });
+    send({ type: "move-piece", id: piece.id, x: state.drag.x, y: state.drag.y, drop: true });
   }
 
   const activeElement = state.elements.pieces.get(state.drag.pieceId);

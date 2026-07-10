@@ -84,6 +84,14 @@ function layoutGrid(pieces, options) {
   });
 }
 
+function createCardHolders() {
+  return [
+    { id: "holder-1", x: 180, y: 150, width: 800, height: 100 },
+    { id: "holder-2", x: 180, y: 300, width: 800, height: 100 },
+    { id: "holder-3", x: 180, y: 450, width: 800, height: 100 },
+  ];
+}
+
 const playerNames = ["kuchen", "PMan", "Babyyoda", "Joni", "HS"];
 const ItemNames = [
   "1\n\n!= Label",
@@ -177,7 +185,7 @@ const sections = [
         frontFill: "#2d6cdf",
         backFill: "#4125c0",
         frontTextColor: "#ffffff",
-        fontSize: 10,
+        fontSize: 12,
         fontFamily: '"Trebuchet MS", sans-serif',
         radius: 4,
       }),
@@ -395,4 +403,8 @@ export function createInitialPieces() {
       back: { ...piece.back },
     })),
   );
+}
+
+export function createInitialHolders() {
+  return createCardHolders().map((holder) => ({ ...holder }));
 }

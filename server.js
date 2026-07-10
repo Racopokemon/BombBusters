@@ -3,7 +3,7 @@ import { extname, join, resolve } from "node:path";
 import { readFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { WebSocketServer, WebSocket } from "ws";
-import { BOARD, createInitialPieces } from "./pieces.js";
+import { BOARD, createInitialHolders, createInitialPieces } from "./pieces.js";
 
 const rootDir = resolve(".");
 const publicDir = join(rootDir, "public");
@@ -29,6 +29,14 @@ function clonePiece(piece) {
 
 function clonePieces(pieces) {
   return pieces.map(clonePiece);
+}
+
+function cloneHolder(holder) {
+  return { ...holder };
+}
+
+function cloneHolders(holders) {
+  return holders.map(cloneHolder);
 }
 
 function shuffleInPlace(items) {
@@ -63,6 +71,7 @@ function colorForIndex(index) {
 
 const state = {
   pieces: new Map(createInitialPieces().map((piece) => [piece.id, piece])),
+  holders: new Map(createInitialHolders().map((holder) => [holder.id, holder])),
   players: new Map(),
   nextZIndex: 1,
 };
@@ -127,6 +136,7 @@ function sendState() {
   broadcast({
     type: "state",
     pieces: clonePieces(Array.from(state.pieces.values())),
+    holders: cloneHolders(Array.from(state.holders.values())),
     players: snapshotPlayers(state.players),
   });
 }
@@ -178,6 +188,45 @@ function setGroupVisibility(group, faceUp) {
   }
 }
 
+function pieceCenter(piece) {
+  return {
+    x: piece.x + piece.width / 2,
+    y: piece.y + piece.height / 2,
+  };
+}
+
+function isPointInHolder(point, holder) {
+  return point.x >= holder.x && point.x <= holder.x + holder.width && point.y >= holder.y && point.y <= holder.y + holder.height;
+}
+
+function snapPiecesInHolder(holder) {
+  const piecesInHolder = Array.from(state.pieces.values())
+    .filter((piece) => isPointInHolder(pieceCenter(piece), holder))
+    .sort((left, right) => left.x - right.x || left.y - right.y);
+
+  if (piecesInHolder.length === 0) {
+    return;
+  }
+
+  const totalWidth = piecesInHolder.reduce((sum, piece) => sum + piece.width, 0);
+  const minGap = 8;
+  const gap = Math.max(minGap, (holder.width - totalWidth) / (piecesInHolder.length + 1));
+  let cursorX = holder.x + gap;
+
+  for (const piece of piecesInHolder) {
+    piece.x = cursorX;
+    piece.y = holder.y + Math.max(0, (holder.height - piece.height) / 2);
+    clampPiece(piece);
+    cursorX += piece.width + gap;
+  }
+}
+
+function snapPiecesIntoHolders() {
+  for (const holder of state.holders.values()) {
+    snapPiecesInHolder(holder);
+  }
+}
+
 wss.on("connection", (socket) => {
   const playerId = randomUUID();
   const color = colorForIndex(state.players.size + Math.floor(Math.random() * 1000));
@@ -211,6 +260,7 @@ wss.on("connection", (socket) => {
         selfId: playerId,
         board: BOARD,
         pieces: clonePieces(Array.from(state.pieces.values())),
+        holders: cloneHolders(Array.from(state.holders.values())),
         players: snapshotPlayers(state.players),
       });
       sendState();
@@ -256,6 +306,9 @@ wss.on("connection", (socket) => {
       }
 
       clampPiece(piece);
+      if (message.drop === true) {
+        snapPiecesIntoHolders();
+      }
       sendState();
       return;
     }
