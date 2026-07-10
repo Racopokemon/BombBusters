@@ -3,6 +3,7 @@ const joinOverlay = document.getElementById("joinOverlay");
 const joinForm = document.getElementById("joinForm");
 const nameInput = document.getElementById("nameInput");
 
+//must also be changed in pieces.js
 const BOARD = {
   width: 1600,
   height: 800,
@@ -65,6 +66,9 @@ function createPieceElement(piece) {
 }
 
 function renderPiece(piece) {
+  if (piece.faceUpByDefault && state.privateReveals.has(piece.id)) {
+    state.privateReveals.delete(piece);
+  }
   const element = state.elements.pieces.get(piece.id) ?? createPieceElement(piece);
   const visible = isPieceVisibleForMe(piece);
   const activeX = state.drag?.pieceId === piece.id ? state.drag.x : piece.x;
@@ -186,7 +190,7 @@ function connect(name) {
       renderAll();
       return;
     }
-
+    
     if (message.type === "state") {
       state.pieces = new Map(message.pieces.map((piece) => [piece.id, piece]));
       updatePlayers(message.players);
@@ -283,12 +287,13 @@ function finishDrag() {
 
 function onPieceContextMenu(event) {
   event.preventDefault();
+  //togglePrivateReveal(event.currentTarget.dataset.pieceId);
   send({ type: "toggle-face", id: event.currentTarget.dataset.pieceId });
 }
 
 function togglePrivateReveal(pieceId) {
   const piece = state.pieces.get(pieceId);
-  if (!piece) {
+  if (!piece || piece.faceUpByDefault) {
     return;
   }
 

@@ -1,6 +1,6 @@
 export const BOARD = {
   width: 1600,
-  height: 1000,
+  height: 800,
 };
 
 function slugify(value) {
