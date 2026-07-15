@@ -75,6 +75,7 @@ const state = {
   players: new Map(),
   nextZIndex: 1,
 };
+snapPiecesIntoHolders();
 
 for (const piece of state.pieces.values()) {
   const pieceZ = Number.isFinite(piece.zIndex) ? piece.zIndex : 1;
@@ -221,13 +222,12 @@ function snapPiecesInHolder(holder) {
   }
 
   const totalWidth = piecesInHolder.reduce((sum, piece) => sum + piece.width, 0);
-  const minGap = 8;
-  const gap = Math.max(minGap, (holder.width - totalWidth) / (piecesInHolder.length + 1));
+  const gap = (holder.width - totalWidth) / (piecesInHolder.length + 1);
   let cursorX = holder.x + gap;
 
   for (const piece of piecesInHolder) {
     piece.x = cursorX;
-    piece.y = holder.y + Math.max(0, (holder.height - piece.height) / 2);
+    piece.y = holder.y + (holder.height - piece.height) / 2;
     clampPiece(piece);
     cursorX += piece.width + gap;
   }
@@ -375,5 +375,5 @@ wss.on("connection", (socket) => {
 const port = Number(process.env.PORT) || 3000;
 
 server.listen(port, "0.0.0.0", () => {
-  console.log(`Bomb Busters prototype running on http://0.0.0.0:${port}`);
+  console.log(`Bomb Busters running on http://0.0.0.0:${port}`);
 });
