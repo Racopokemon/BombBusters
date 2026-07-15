@@ -1,6 +1,7 @@
 Issues
 
-- multiplayer lags
 - initial card alignment
-- improve card holder
-- 
+- initially, snap once
+- improve card holder on overflow (dont fix this)
+- != and == label
+- die ? ? und Zahlenmarker shuffeln immer noch zusammen
