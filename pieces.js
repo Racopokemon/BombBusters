@@ -86,9 +86,12 @@ function layoutGrid(pieces, options) {
 
 function createCardHolders() {
   return [
-    { id: "holder-1", x: 180, y: 150, width: 800, height: 100 },
-    { id: "holder-2", x: 180, y: 300, width: 800, height: 100 },
-    { id: "holder-3", x: 180, y: 450, width: 800, height: 100 },
+    { id: "holder-1", x: 180, y: 100, width: 1200, height: 100 },
+    { id: "holder-2", x: 180, y: 225, width: 1200, height: 100 },
+    { id: "holder-3", x: 180, y: 350, width: 1200, height: 100 },
+    { id: "holder-4", x: 180, y: 475, width: 1200, height: 100 },
+    { id: "holder-5", x: 180, y: 600, width: 1200, height: 100 },
+    { id: "holder-6", x: 180, y: 725, width: 1200, height: 100 },
   ];
 }
 
