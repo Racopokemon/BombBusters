@@ -141,6 +141,18 @@ function sendState() {
   });
 }
 
+function sendPieceUpdate(piece) {
+  broadcast({
+    type: "piece",
+    piece: {
+      id: piece.id,
+      x: piece.x,
+      y: piece.y,
+      zIndex: piece.zIndex,
+    },
+  });
+}
+
 function clampPiece(piece) {
   piece.x = Math.max(0, Math.min(BOARD.width - piece.width, piece.x));
   piece.y = Math.max(0, Math.min(BOARD.height - piece.height, piece.y));
@@ -308,8 +320,11 @@ wss.on("connection", (socket) => {
       clampPiece(piece);
       if (message.drop === true) {
         snapPiecesIntoHolders();
+        sendState();
+        return;
       }
-      sendState();
+
+      sendPieceUpdate(piece);
       return;
     }
 
