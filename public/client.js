@@ -237,6 +237,18 @@ function connect(name) {
       return;
     }
 
+    if (message.type === "piece") {
+      const updatedPiece = message.piece;
+      const piece = state.pieces.get(updatedPiece.id);
+      if (!piece) {
+        return;
+      }
+
+      Object.assign(piece, updatedPiece);
+      renderPiece(piece);
+      return;
+    }
+
     if (message.type === "cursor") {
       const player = state.players.get(message.playerId);
       if (player) {
