@@ -150,6 +150,7 @@ function sendPieceUpdate(piece) {
       x: piece.x,
       y: piece.y,
       zIndex: piece.zIndex,
+      faceUpByDefault: piece.faceUpByDefault,
     },
   });
 }
@@ -218,25 +219,35 @@ function snapPiecesInHolder(holder) {
     .sort((left, right) => left.x - right.x || left.y - right.y);
 
   if (piecesInHolder.length === 0) {
-    return;
+    return false;
   }
 
   const totalWidth = piecesInHolder.reduce((sum, piece) => sum + piece.width, 0);
   const gap = (holder.width - totalWidth) / (piecesInHolder.length + 1);
   let cursorX = holder.x + gap;
+  let changed = false;
 
   for (const piece of piecesInHolder) {
-    piece.x = cursorX;
-    piece.y = holder.y + (holder.height - piece.height) / 2;
+    const nextX = cursorX;
+    const nextY = holder.y + (holder.height - piece.height) / 2;
+    changed = changed || piece.x !== nextX || piece.y !== nextY;
+    piece.x = nextX;
+    piece.y = nextY;
     clampPiece(piece);
     cursorX += piece.width + gap;
   }
+
+  return changed;
 }
 
 function snapPiecesIntoHolders() {
+  let changed = false;
+
   for (const holder of state.holders.values()) {
-    snapPiecesInHolder(holder);
+    changed = snapPiecesInHolder(holder) || changed;
   }
+
+  return changed;
 }
 
 wss.on("connection", (socket) => {
@@ -319,8 +330,11 @@ wss.on("connection", (socket) => {
 
       clampPiece(piece);
       if (message.drop === true) {
-        snapPiecesIntoHolders();
-        sendState();
+        if (snapPiecesIntoHolders()) {
+          sendState();
+        } else {
+          sendPieceUpdate(piece);
+        }
         return;
       }
 
@@ -335,7 +349,7 @@ wss.on("connection", (socket) => {
       }
 
       piece.faceUpByDefault = !piece.faceUpByDefault;
-      sendState();
+      sendPieceUpdate(piece);
       return;
     }
 
